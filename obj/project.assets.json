@@ -181,7 +181,7 @@
           }
         }
       },
-      "R.E.P.O.GameLibs.Steam/0.2.0-ngd.0": {
+      "R.E.P.O.GameLibs.Steam/0.2.1-ngd.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.JSON": "13.0.3",
@@ -975,14 +975,14 @@
         "packageIcon.png"
       ]
     },
-    "R.E.P.O.GameLibs.Steam/0.2.0-ngd.0": {
-      "sha512": "4Tv0dDRzUtIUtHvih76Y8aZbGbMulYU32EBCXo+mOKvJFgC5YB/ajICXhgjnGx7c7SgWXfLRKT4ntRsQbGLvlg==",
+    "R.E.P.O.GameLibs.Steam/0.2.1-ngd.0": {
+      "sha512": "DvCONdN/G2tWXhWBmbkFQnSVcGi3KGlQMlOaUoj85dZ56PiHVhWXeEA5OVMvrOsOTJ2iWWDSvSq02orene1dew==",
       "type": "package",
-      "path": "r.e.p.o.gamelibs.steam/0.2.0-ngd.0",
+      "path": "r.e.p.o.gamelibs.steam/0.2.1-ngd.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "r.e.p.o.gamelibs.steam.0.2.0-ngd.0.nupkg.sha512",
+        "r.e.p.o.gamelibs.steam.0.2.1-ngd.0.nupkg.sha512",
         "r.e.p.o.gamelibs.steam.nuspec",
         "ref/netstandard2.1/Assembly-CSharp-firstpass.dll",
         "ref/netstandard2.1/Assembly-CSharp.dll",

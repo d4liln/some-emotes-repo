@@ -38,7 +38,13 @@ namespace SomeEmotesREPO
         {
             var pluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var bundlePath = Path.Combine(pluginFolder, "emotes.bundle");
+
             assetBundle = EmoteBundleLoader.Load(bundlePath);
+            if (assetBundle == null)
+            {
+                bundlePath = Path.Combine(pluginFolder, "Emotes", "emotes.bundle");
+                assetBundle = EmoteBundleLoader.Load(bundlePath);
+            }
 
             var preferencesPath = Path.Combine(pluginFolder, "preferences.json");
             try

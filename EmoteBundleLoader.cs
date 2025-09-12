@@ -7,7 +7,7 @@ namespace SomeEmotesREPO
 {
     public static class EmoteBundleLoader
     {
-        private static AssetBundle emoteBundle;
+        private static AssetBundle emoteBundle = null;
 
         public static AssetBundle Load(string path)
         {

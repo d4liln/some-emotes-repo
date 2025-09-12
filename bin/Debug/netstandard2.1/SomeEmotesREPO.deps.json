@@ -13,7 +13,7 @@
           "BepInEx.AssemblyPublicizer.MSBuild": "0.4.1",
           "BepInEx.Core": "5.4.21",
           "Linkoid.Repo.Plugin.Build": "0.2.2",
-          "R.E.P.O.GameLibs.Steam": "0.2.0-ngd.0",
+          "R.E.P.O.GameLibs.Steam": "0.2.1-ngd.0",
           "UnityEngine.Modules": "2022.3.21"
         },
         "runtime": {
@@ -75,7 +75,7 @@
           }
         }
       },
-      "R.E.P.O.GameLibs.Steam/0.2.0-ngd.0": {
+      "R.E.P.O.GameLibs.Steam/0.2.1-ngd.0": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.3",
           "UnityEngine.Modules": "2022.3.21"
@@ -374,12 +374,12 @@
       "path": "newtonsoft.json/13.0.3",
       "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
     },
-    "R.E.P.O.GameLibs.Steam/0.2.0-ngd.0": {
+    "R.E.P.O.GameLibs.Steam/0.2.1-ngd.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4Tv0dDRzUtIUtHvih76Y8aZbGbMulYU32EBCXo+mOKvJFgC5YB/ajICXhgjnGx7c7SgWXfLRKT4ntRsQbGLvlg==",
-      "path": "r.e.p.o.gamelibs.steam/0.2.0-ngd.0",
-      "hashPath": "r.e.p.o.gamelibs.steam.0.2.0-ngd.0.nupkg.sha512"
+      "sha512": "sha512-DvCONdN/G2tWXhWBmbkFQnSVcGi3KGlQMlOaUoj85dZ56PiHVhWXeEA5OVMvrOsOTJ2iWWDSvSq02orene1dew==",
+      "path": "r.e.p.o.gamelibs.steam/0.2.1-ngd.0",
+      "hashPath": "r.e.p.o.gamelibs.steam.0.2.1-ngd.0.nupkg.sha512"
     },
     "System.Collections/4.3.0": {
       "type": "package",

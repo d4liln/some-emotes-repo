@@ -104,6 +104,7 @@ namespace SomeEmotesREPO
                 if (playerVisuals == null)
                 {
                     playerVisuals = playerAvatar.transform.parent.GetComponentInChildren<PlayerAvatarVisuals>();
+                    HierarchyLogger.LogFullHierarchy(playerVisuals.gameObject);
                     animator = playerVisuals.GetComponentInChildren<Animator>();//ofc it is bugged
                 }
             }
