@@ -1,6 +1,7 @@
 C:\Users\imgog\Desktop\Mod REPO Emotes\bin\Debug\netstandard2.1\SomeEmotesREPO.deps.json
 C:\Users\imgog\Desktop\Mod REPO Emotes\bin\Debug\netstandard2.1\SomeEmotesREPO.dll
 C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.csproj.AssemblyReference.cache
+C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.IgnoresAccessChecksTo.cs
 C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.AssemblyInfoInputs.cache
 C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.AssemblyInfo.cs

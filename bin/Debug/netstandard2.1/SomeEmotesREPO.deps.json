@@ -7,10 +7,10 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "SomeEmotesREPO/1.0.4": {
+      "SomeEmotesREPO/1.0.6": {
         "dependencies": {
           "BepInEx.Analyzers": "1.0.8",
-          "BepInEx.AssemblyPublicizer.MSBuild": "0.4.1",
+          "BepInEx.AssemblyPublicizer.MSBuild": "0.4.3",
           "BepInEx.Core": "5.4.21",
           "Linkoid.Repo.Plugin.Build": "0.2.2",
           "R.E.P.O.GameLibs.Steam": "0.2.1-ngd.0",
@@ -21,7 +21,7 @@
         }
       },
       "BepInEx.Analyzers/1.0.8": {},
-      "BepInEx.AssemblyPublicizer.MSBuild/0.4.1": {},
+      "BepInEx.AssemblyPublicizer.MSBuild/0.4.3": {},
       "BepInEx.BaseLib/5.4.20": {},
       "BepInEx.Core/5.4.21": {
         "dependencies": {
@@ -278,7 +278,7 @@
     }
   },
   "libraries": {
-    "SomeEmotesREPO/1.0.4": {
+    "SomeEmotesREPO/1.0.6": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -290,12 +290,12 @@
       "path": "bepinex.analyzers/1.0.8",
       "hashPath": "bepinex.analyzers.1.0.8.nupkg.sha512"
     },
-    "BepInEx.AssemblyPublicizer.MSBuild/0.4.1": {
+    "BepInEx.AssemblyPublicizer.MSBuild/0.4.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-bbTaXa0CKDuap0vDR+NkSz9crQIYhMvIbId9njUajYZAcr8OTuVcyiSlexzeGxfkYAbbn0z9YpgbIoeyHADXqA==",
-      "path": "bepinex.assemblypublicizer.msbuild/0.4.1",
-      "hashPath": "bepinex.assemblypublicizer.msbuild.0.4.1.nupkg.sha512"
+      "sha512": "sha512-Z8Qs3JTTHZG1q0DCqY+HFJ8xp92tkEXWyQ7roeWgUvn20tjv0ZNfAdyy13XrRS1jeEoN/weJc81747TbvvwaDg==",
+      "path": "bepinex.assemblypublicizer.msbuild/0.4.3",
+      "hashPath": "bepinex.assemblypublicizer.msbuild.0.4.3.nupkg.sha512"
     },
     "BepInEx.BaseLib/5.4.20": {
       "type": "package",

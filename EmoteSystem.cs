@@ -4,7 +4,6 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using System;
-using SomeEmotesREPO.Utils;
 
 namespace SomeEmotesREPO
 {
@@ -104,8 +103,16 @@ namespace SomeEmotesREPO
                 if (playerVisuals == null)
                 {
                     playerVisuals = playerAvatar.transform.parent.GetComponentInChildren<PlayerAvatarVisuals>();
-                    HierarchyLogger.LogFullHierarchy(playerVisuals.gameObject);
-                    animator = playerVisuals.GetComponentInChildren<Animator>();//ofc it is bugged
+                }
+
+                if (playerVisuals != null)
+                {
+                    animator = playerVisuals.GetComponentInChildren<Animator>();
+
+                    if (animator == null)
+                    {
+                        SomeEmotesREPO.Logger.LogWarning("Animator object not found on player visuals. Emote system visual features disabled.");
+                    }
                 }
             }
 
@@ -199,7 +206,10 @@ namespace SomeEmotesREPO
 
                 if (!PV.IsMine)
                 {
-                    animator.enabled = !IsEmoting;
+                    if (animator != null)
+                    {
+                        animator.enabled = !IsEmoting;
+                    }
                     playerVisuals.meshParent.SetActive(!IsEmoting);
                 }
                 else

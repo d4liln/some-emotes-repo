@@ -4,7 +4,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>ImGogole</Authors>
-    <Version>1.0.6</Version>
+    <Version>1.0.4</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
@@ -22,7 +22,8 @@
     <Reference Include="Microsoft.CSharp" />
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" IncludeAssets="build" />
-    <PackageReference Include="Linkoid.Repo.Plugin.Build" Version="*" PrivateAssets="all" />
+    <PackageReference Include="Lib.Harmony" Version="2.4.1" />
+    <PackageReference Include="Linkoid.Repo.Plugin.Build" Version="0.2.2" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.*" ExcludeAssets="runtime" />
     <PackageReference Include="UnityEngine.Modules" Version="2022.3.21" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="R.E.P.O.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
@@ -30,6 +31,4 @@
   <ItemGroup>
     <None Remove="Directory.Repo.props" />
   </ItemGroup>
-  <ItemGroup>
-</ItemGroup>
 </Project>

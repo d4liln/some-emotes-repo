@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\imgog\\Desktop\\Mod REPO Emotes\\SomeEmotesREPO.csproj": {
-      "version": "1.0.4",
+      "version": "1.0.6",
       "restore": {
         "projectUniqueName": "C:\\Users\\imgog\\Desktop\\Mod REPO Emotes\\SomeEmotesREPO.csproj",
         "projectName": "SomeEmotesREPO",
@@ -13,8 +13,12 @@
         "packagesPath": "C:\\Users\\imgog\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\imgog\\Desktop\\Mod REPO Emotes\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
           "C:\\Users\\imgog\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -42,7 +46,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "netstandard2.1": {
@@ -57,7 +62,7 @@
               "include": "Build",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[0.4.1, )"
+              "version": "[0.4.3, )"
             },
             "BepInEx.Core": {
               "include": "Compile, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -97,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     }

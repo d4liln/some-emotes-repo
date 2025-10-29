@@ -1,4 +1,4 @@
-# SomeEmotesREPO 1.0.6 - by ImGogole
+# SomeEmotesREPO 1.0.4 - by ImGogole
 
 **SomeEmotesREPO** is a mod for the game **R.E.P.O.** that allows players to perform custom emotes.
 

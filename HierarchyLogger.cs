@@ -25,7 +25,7 @@ namespace SomeEmotesREPO
             Component[] components = t.GetComponents<Component>();
             string componentList = string.Join(", ",
                 components
-                    .Where(c => !(c is Transform))
+                    .Where(c => c is not Transform)
                     .Select(c => c.GetType().Name));
 
             if (!string.IsNullOrEmpty(componentList))

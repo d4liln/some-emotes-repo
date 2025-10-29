@@ -1,0 +1,8 @@
+.vs/
+*.suo
+*.user
+[Bb]in/
+[Oo]bj/
+*.tmp
+*.Backup.tmp
+**/*Copilot*

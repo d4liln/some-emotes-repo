@@ -5,7 +5,7 @@
       "BepInEx.Analyzers/1.0.8": {
         "type": "package"
       },
-      "BepInEx.AssemblyPublicizer.MSBuild/0.4.1": {
+      "BepInEx.AssemblyPublicizer.MSBuild/0.4.3": {
         "type": "package",
         "compile": {
           "lib/netstandard2.1/_._": {}
@@ -717,14 +717,14 @@
         "tools/uninstall.ps1"
       ]
     },
-    "BepInEx.AssemblyPublicizer.MSBuild/0.4.1": {
-      "sha512": "bbTaXa0CKDuap0vDR+NkSz9crQIYhMvIbId9njUajYZAcr8OTuVcyiSlexzeGxfkYAbbn0z9YpgbIoeyHADXqA==",
+    "BepInEx.AssemblyPublicizer.MSBuild/0.4.3": {
+      "sha512": "Z8Qs3JTTHZG1q0DCqY+HFJ8xp92tkEXWyQ7roeWgUvn20tjv0ZNfAdyy13XrRS1jeEoN/weJc81747TbvvwaDg==",
       "type": "package",
-      "path": "bepinex.assemblypublicizer.msbuild/0.4.1",
+      "path": "bepinex.assemblypublicizer.msbuild/0.4.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "bepinex.assemblypublicizer.msbuild.0.4.1.nupkg.sha512",
+        "bepinex.assemblypublicizer.msbuild.0.4.3.nupkg.sha512",
         "bepinex.assemblypublicizer.msbuild.nuspec",
         "build/BepInEx.AssemblyPublicizer.MSBuild.props",
         "contentFiles/cs/any/IgnoresAccessChecksToAttribute.cs",
@@ -2908,7 +2908,7 @@
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.1": [
       "BepInEx.Analyzers >= 1.*",
-      "BepInEx.AssemblyPublicizer.MSBuild >= 0.4.1",
+      "BepInEx.AssemblyPublicizer.MSBuild >= 0.4.3",
       "BepInEx.Core >= 5.*",
       "Linkoid.Repo.Plugin.Build >= *",
       "R.E.P.O.GameLibs.Steam >= *-*",
@@ -2916,10 +2916,11 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\imgog\\.nuget\\packages\\": {}
+    "C:\\Users\\imgog\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.0.4",
+    "version": "1.0.6",
     "restore": {
       "projectUniqueName": "C:\\Users\\imgog\\Desktop\\Mod REPO Emotes\\SomeEmotesREPO.csproj",
       "projectName": "SomeEmotesREPO",
@@ -2927,8 +2928,12 @@
       "packagesPath": "C:\\Users\\imgog\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\imgog\\Desktop\\Mod REPO Emotes\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
         "C:\\Users\\imgog\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2956,7 +2961,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "netstandard2.1": {
@@ -2971,7 +2977,7 @@
             "include": "Build",
             "suppressParent": "All",
             "target": "Package",
-            "version": "[0.4.1, )"
+            "version": "[0.4.3, )"
           },
           "BepInEx.Core": {
             "include": "Compile, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -3011,7 +3017,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306\\RuntimeIdentifierGraph.json"
       }
     }
   }

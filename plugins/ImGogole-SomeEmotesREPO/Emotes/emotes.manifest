@@ -1,0 +1,80 @@
+ManifestFileVersion: 0
+CRC: 1187612323
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: f6f1d0ce825d9e9f3ffb391d636b3a7d
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 408268fe75e8564fc5570939e3fdc91a
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: f6f1d0ce825d9e9f3ffb391d636b3a7d
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/AnimationsExtracted/Dancing Twerk.anim
+- Assets/AnimationsExtracted/Breakdance Ready.anim
+- Assets/EmoteBundle/Emote.controller
+- Assets/AnimationsExtracted/Air Horse Gallop.anim
+- Assets/Teko-Regular.ttf
+- Assets/AnimationsExtracted/Thriller Part 3.anim
+- Assets/AnimationsExtracted/Tut Hip Hop Dance.anim
+- Assets/AnimationsExtracted/Samba Dancing (2).anim
+- Assets/AnimationsExtracted/Swing Dancing.anim
+- Assets/AnimationsExtracted/Bellydancing.anim
+- Assets/AnimationsExtracted/Bboy Hip Hop Move.anim
+- Assets/AnimationsExtracted/Dancing.anim
+- Assets/AnimationsExtracted/Hip Hop Dancing (1).anim
+- Assets/AnimationsExtracted/Flair.anim
+- Assets/AnimationsExtracted/Shuffling.anim
+- Assets/AnimationsExtracted/Samba Dancing (1).anim
+- Assets/AnimationsExtracted/Breakdance Freeze Var 2.anim
+- Assets/AnimationsExtracted/Female Dance Pose (1).anim
+- Assets/AnimationsExtracted/Head Spinning.anim
+- Assets/AnimationsExtracted/Male Dance Pose.anim
+- Assets/EmoteBundle/Emote.prefab
+- Assets/AnimationsExtracted/Breakdance Uprock Var 1.anim
+- Assets/AnimationsExtracted/Hip Hop Dancing.anim
+- Assets/AnimationsExtracted/Twist Dance.anim
+- Assets/AnimationsExtracted/Breakdance 1990.anim
+- Assets/AnimationsExtracted/Dancing Running Man.anim
+- Assets/AnimationsExtracted/Female Dance Pose.anim
+- Assets/AnimationsExtracted/Robot Hip Hop Dance.anim
+- Assets/AnimationsExtracted/Samba Dancing.anim
+- Assets/AnimationsExtracted/House Dancing.anim
+- Assets/AnimationsExtracted/Baby Shark.anim
+- Assets/AnimationsExtracted/Bboy Uprock.anim
+- Assets/AnimationsExtracted/Hip Hop Dancing (2).anim
+- Assets/AnimationsExtracted/Can Can.anim
+- Assets/EmoteBundle/Capoeira.anim
+- Assets/AnimationsExtracted/Northern Soul Spin.anim
+- Assets/AnimationsExtracted/Brooklyn Uprock.anim
+- Assets/AnimationsExtracted/Jazz Dancing.anim
+- Assets/AnimationsExtracted/Breakdance Footwork 2.anim
+Dependencies: []
