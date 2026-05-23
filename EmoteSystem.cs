@@ -151,10 +151,9 @@ namespace SomeEmotesREPO
         [PunRPC]
         private void RPC_PlayEmote(string emoteId, float _initialRot)
         {
-            // Ignores if emotes are disabled by the client
-            //if (!PV.IsMine && SomeEmotesREPO.ConfigActiveEmoteSystem.Value == false) return;
-
             IsEmoting = true;
+
+            if (emoteLauncher == null) return;
 
             emoteLauncher.SetRotation(_initialRot);
             emoteLauncher.Animate(emoteId);
@@ -166,7 +165,10 @@ namespace SomeEmotesREPO
         {
             IsEmoting = false;
 
-            emoteLauncher.StopEmote();
+            if (emoteLauncher != null)
+            {
+                emoteLauncher.StopEmote();
+            }
         }
 
         void Update()

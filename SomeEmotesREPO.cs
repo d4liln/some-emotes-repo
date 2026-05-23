@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace SomeEmotesREPO;
 
-[BepInPlugin("ImGogole.SomeEmotesREPO", "SomeEmotesREPO", "1.0.4")]
+[BepInPlugin("ImGogole.SomeEmotesREPO", "SomeEmotesREPO", "1.0.7")]
 public class SomeEmotesREPO : BaseUnityPlugin
 {
     internal static SomeEmotesREPO Instance { get; private set; } = null!;

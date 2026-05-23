@@ -30,6 +30,9 @@ namespace SomeEmotesREPO
     {
         static void Prefix(PlayerAvatarVisuals __instance)
         {
+            if (!EmoteSystem.Ready || EmoteSystem.Instance == null) return;
+            if (!EmoteSystem.Instance.IsEmoting) return;
+
             EmoteSystem.Instance.StopEmote();
         }
     }
