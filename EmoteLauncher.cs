@@ -151,22 +151,29 @@ namespace SomeEmotesREPO
 
         public void InitTexturesFrom(GameObject initial)
         {
-            if (leg_R != null) leg_R.materials = GetMaterialsFromBone(initial, "mesh_leg_r");
-            if (leg_L != null) leg_L.materials = GetMaterialsFromBone(initial, "mesh_leg_l");
-            if (body_bot != null) body_bot.materials = GetMaterialsFromBone(initial, "mesh_body_bot");
-            if (body_top_sphere != null) body_top_sphere.materials = GetMaterialsFromBone(initial, "mesh_body_top_sphere");
-            if (arm_L != null) arm_L.materials = GetMaterialsFromBone(initial, "mesh_arm_l");
-            if (arm_R != null) arm_R.materials = GetMaterialsFromBone(initial, "mesh_arm_r");
-            if (health_LED != null) health_LED.materials = GetMaterialsFromBone(initial, "mesh_health");
-            if (health_frame != null) health_frame.materials = GetMaterialsFromBone(initial, "mesh_health frame");
-            if (health_shadow != null) health_shadow.materials = GetMaterialsFromBone(initial, "mesh_health shadow");
-            if (head_bot_sphere != null) head_bot_sphere.materials = GetMaterialsFromBone(initial, "mesh_head_bot_sphere");
-            if (head_bot_flat != null) head_bot_flat.materials = GetMaterialsFromBone(initial, "mesh_head_bot_flat");
-            if (head_top != null) head_top.materials = GetMaterialsFromBone(initial, "mesh_head_top");
-            if (eye_L != null) eye_L.materials = GetMaterialsFromBone(initial, "mesh_eye_l");
-            if (iris_L != null) iris_L.materials = GetMaterialsFromBone(initial, "mesh_pupil_l");
-            if (eye_R != null) eye_R.materials = GetMaterialsFromBone(initial, "mesh_eye_r");
-            if (iris_R != null) iris_R.materials = GetMaterialsFromBone(initial, "mesh_pupil_r");
+            TryCopyMaterials(leg_R, initial, "mesh_leg_r");
+            TryCopyMaterials(leg_L, initial, "mesh_leg_l");
+            TryCopyMaterials(body_bot, initial, "mesh_body_bot");
+            TryCopyMaterials(body_top_sphere, initial, "mesh_body_top_sphere");
+            TryCopyMaterials(arm_L, initial, "mesh_arm_l");
+            TryCopyMaterials(arm_R, initial, "mesh_arm_r");
+            TryCopyMaterials(health_LED, initial, "mesh_health");
+            TryCopyMaterials(health_frame, initial, "mesh_health frame");
+            TryCopyMaterials(health_shadow, initial, "mesh_health shadow");
+            TryCopyMaterials(head_bot_sphere, initial, "mesh_head_bot_sphere");
+            TryCopyMaterials(head_bot_flat, initial, "mesh_head_bot_flat");
+            TryCopyMaterials(head_top, initial, "mesh_head_top");
+            TryCopyMaterials(eye_L, initial, "mesh_eye_l");
+            TryCopyMaterials(iris_L, initial, "mesh_pupil_l");
+            TryCopyMaterials(eye_R, initial, "mesh_eye_r");
+            TryCopyMaterials(iris_R, initial, "mesh_pupil_r");
+        }
+
+        void TryCopyMaterials(SkinnedMeshRenderer target, GameObject source, string boneName)
+        {
+            if (target == null) return;
+            var materials = GetMaterialsFromBone(source, boneName);
+            if (materials != null) target.materials = materials;
         }
 
         Material[] GetMaterialsFromBone(GameObject initial, string name)
