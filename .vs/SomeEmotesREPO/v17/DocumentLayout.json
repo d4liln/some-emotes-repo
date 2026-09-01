@@ -72,7 +72,7 @@
               "RelativeDocumentMoniker": "EmoteSystem.cs",
               "ToolTip": "C:\\Users\\imgog\\Desktop\\Mod REPO Emotes\\EmoteSystem.cs",
               "RelativeToolTip": "EmoteSystem.cs",
-              "ViewState": "AgIAAL0AAAAAAAAAAAAuwNMAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAIQAAAAAAAAAAAAgwNMAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-26T18:43:48.703Z",
               "EditorCaption": ""
@@ -87,8 +87,7 @@
               "RelativeToolTip": "EmoteLoader.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T18:43:48.699Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T18:43:48.699Z"
             },
             {
               "$type": "Document",
@@ -100,8 +99,7 @@
               "RelativeToolTip": "HierarchyLogger.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T18:43:48.695Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T18:43:48.695Z"
             },
             {
               "$type": "Document",
@@ -113,8 +111,7 @@
               "RelativeToolTip": "EmoteBundleLoader.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-03T18:03:26.782Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-03T18:03:26.782Z"
             },
             {
               "$type": "Document",
@@ -126,8 +123,7 @@
               "RelativeToolTip": "PlayerAvatarVisualsPatch.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAIBJwB0AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T18:43:48.708Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T18:43:48.708Z"
             },
             {
               "$type": "Document",
@@ -139,8 +135,7 @@
               "RelativeToolTip": "EmoteLauncher.cs",
               "ViewState": "AgIAAF4AAAAAAAAAAAAtwH4AAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T18:43:48.701Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T18:43:48.701Z"
             },
             {
               "$type": "Document",
@@ -152,8 +147,7 @@
               "RelativeToolTip": "FlashlightControllerPatch.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T18:43:48.706Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T18:43:48.706Z"
             },
             {
               "$type": "Document",
@@ -165,8 +159,7 @@
               "RelativeToolTip": "PlayerNameCheckerPatch.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T18:43:48.709Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T18:43:48.709Z"
             },
             {
               "$type": "Document",
@@ -176,10 +169,9 @@
               "RelativeDocumentMoniker": "SomeEmotesREPO.cs",
               "ToolTip": "C:\\Users\\imgog\\Desktop\\Mod REPO Emotes\\SomeEmotesREPO.cs",
               "RelativeToolTip": "SomeEmotesREPO.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAA1wBEAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAABEAAAAAAAAAAAAzwBEAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T18:43:48.704Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T18:43:48.704Z"
             },
             {
               "$type": "Document",
@@ -191,8 +183,7 @@
               "RelativeToolTip": "AddPatchGameDirector.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-02T23:31:23.983Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-02T23:31:23.983Z"
             },
             {
               "$type": "Document",
@@ -204,8 +195,7 @@
               "RelativeToolTip": "AddEmoteSystemPatch.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T18:43:48.698Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T18:43:48.698Z"
             },
             {
               "$type": "Document",
@@ -217,8 +207,7 @@
               "RelativeToolTip": "AddPatchPlayerExpression.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T18:44:47.223Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T18:44:47.223Z"
             }
           ]
         }

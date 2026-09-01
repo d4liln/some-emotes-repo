@@ -1,7 +1,7 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
-    ".NETStandard,Version=v2.1": {
+    "netstandard2.1": {
       "BepInEx.Analyzers/1.0.8": {
         "type": "package"
       },
@@ -181,7 +181,7 @@
           }
         }
       },
-      "R.E.P.O.GameLibs.Steam/0.2.1-ngd.0": {
+      "R.E.P.O.GameLibs.Steam/0.4.4-ngd.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.JSON": "13.0.3",
@@ -191,6 +191,8 @@
           "ref/netstandard2.1/Assembly-CSharp-firstpass.dll": {},
           "ref/netstandard2.1/Assembly-CSharp.dll": {},
           "ref/netstandard2.1/Autodesk.Fbx.dll": {},
+          "ref/netstandard2.1/Discord.Sdk.dll": {},
+          "ref/netstandard2.1/Domain_Reload.dll": {},
           "ref/netstandard2.1/Facepunch.Steamworks.Win64.dll": {},
           "ref/netstandard2.1/FbxBuildTestAssets.dll": {},
           "ref/netstandard2.1/Klattersynth.dll": {},
@@ -203,19 +205,33 @@
           "ref/netstandard2.1/PhotonVoice.PUN.dll": {},
           "ref/netstandard2.1/PhotonVoice.dll": {},
           "ref/netstandard2.1/SingularityGroup.HotReload.Runtime.Public.dll": {},
-          "ref/netstandard2.1/SingularityGroup.HotReload.Runtime.dll": {},
           "ref/netstandard2.1/Sirenix.OdinInspector.Attributes.dll": {},
+          "ref/netstandard2.1/Sirenix.OdinInspector.Modules.Unity.Addressables.dll": {},
+          "ref/netstandard2.1/Sirenix.OdinInspector.Modules.UnityLocalization.dll": {},
           "ref/netstandard2.1/Sirenix.Serialization.Config.dll": {},
           "ref/netstandard2.1/Sirenix.Serialization.dll": {},
           "ref/netstandard2.1/Sirenix.Utilities.dll": {},
           "ref/netstandard2.1/Unity.AI.Navigation.dll": {},
+          "ref/netstandard2.1/Unity.Addressables.dll": {},
+          "ref/netstandard2.1/Unity.Burst.Unsafe.dll": {},
+          "ref/netstandard2.1/Unity.Burst.dll": {},
+          "ref/netstandard2.1/Unity.Collections.LowLevel.ILSupport.dll": {},
+          "ref/netstandard2.1/Unity.Collections.dll": {},
           "ref/netstandard2.1/Unity.Formats.Fbx.Runtime.dll": {},
           "ref/netstandard2.1/Unity.InputSystem.ForUI.dll": {},
           "ref/netstandard2.1/Unity.InputSystem.dll": {},
+          "ref/netstandard2.1/Unity.InternalAPIEngineBridge.013.dll": {},
+          "ref/netstandard2.1/Unity.Localization.dll": {},
+          "ref/netstandard2.1/Unity.Mathematics.dll": {},
+          "ref/netstandard2.1/Unity.MemoryProfiler.dll": {},
           "ref/netstandard2.1/Unity.Postprocessing.Runtime.dll": {},
+          "ref/netstandard2.1/Unity.Profiling.Core.dll": {},
           "ref/netstandard2.1/Unity.RenderPipelines.Core.Runtime.dll": {},
           "ref/netstandard2.1/Unity.RenderPipelines.Core.ShaderLibrary.dll": {},
           "ref/netstandard2.1/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll": {},
+          "ref/netstandard2.1/Unity.ResourceManager.dll": {},
+          "ref/netstandard2.1/Unity.ScriptableBuildPipeline.dll": {},
+          "ref/netstandard2.1/Unity.Splines.dll": {},
           "ref/netstandard2.1/Unity.TextMeshPro.dll": {},
           "ref/netstandard2.1/Unity.Timeline.dll": {},
           "ref/netstandard2.1/Unity.VisualScripting.Antlr3.Runtime.dll": {},
@@ -975,18 +991,20 @@
         "packageIcon.png"
       ]
     },
-    "R.E.P.O.GameLibs.Steam/0.2.1-ngd.0": {
-      "sha512": "DvCONdN/G2tWXhWBmbkFQnSVcGi3KGlQMlOaUoj85dZ56PiHVhWXeEA5OVMvrOsOTJ2iWWDSvSq02orene1dew==",
+    "R.E.P.O.GameLibs.Steam/0.4.4-ngd.0": {
+      "sha512": "1Yo0JbKQgociO32lb0ac3doI00ifYf8TH4ZVyz5aBOa3F+hhTgqSHXT26zg0XX9lCjpNkmVTqDmLvIYG0mn4IQ==",
       "type": "package",
-      "path": "r.e.p.o.gamelibs.steam/0.2.1-ngd.0",
+      "path": "r.e.p.o.gamelibs.steam/0.4.4-ngd.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "r.e.p.o.gamelibs.steam.0.2.1-ngd.0.nupkg.sha512",
+        "r.e.p.o.gamelibs.steam.0.4.4-ngd.0.nupkg.sha512",
         "r.e.p.o.gamelibs.steam.nuspec",
         "ref/netstandard2.1/Assembly-CSharp-firstpass.dll",
         "ref/netstandard2.1/Assembly-CSharp.dll",
         "ref/netstandard2.1/Autodesk.Fbx.dll",
+        "ref/netstandard2.1/Discord.Sdk.dll",
+        "ref/netstandard2.1/Domain_Reload.dll",
         "ref/netstandard2.1/Facepunch.Steamworks.Win64.dll",
         "ref/netstandard2.1/FbxBuildTestAssets.dll",
         "ref/netstandard2.1/Klattersynth.dll",
@@ -999,19 +1017,33 @@
         "ref/netstandard2.1/PhotonVoice.PUN.dll",
         "ref/netstandard2.1/PhotonVoice.dll",
         "ref/netstandard2.1/SingularityGroup.HotReload.Runtime.Public.dll",
-        "ref/netstandard2.1/SingularityGroup.HotReload.Runtime.dll",
         "ref/netstandard2.1/Sirenix.OdinInspector.Attributes.dll",
+        "ref/netstandard2.1/Sirenix.OdinInspector.Modules.Unity.Addressables.dll",
+        "ref/netstandard2.1/Sirenix.OdinInspector.Modules.UnityLocalization.dll",
         "ref/netstandard2.1/Sirenix.Serialization.Config.dll",
         "ref/netstandard2.1/Sirenix.Serialization.dll",
         "ref/netstandard2.1/Sirenix.Utilities.dll",
         "ref/netstandard2.1/Unity.AI.Navigation.dll",
+        "ref/netstandard2.1/Unity.Addressables.dll",
+        "ref/netstandard2.1/Unity.Burst.Unsafe.dll",
+        "ref/netstandard2.1/Unity.Burst.dll",
+        "ref/netstandard2.1/Unity.Collections.LowLevel.ILSupport.dll",
+        "ref/netstandard2.1/Unity.Collections.dll",
         "ref/netstandard2.1/Unity.Formats.Fbx.Runtime.dll",
         "ref/netstandard2.1/Unity.InputSystem.ForUI.dll",
         "ref/netstandard2.1/Unity.InputSystem.dll",
+        "ref/netstandard2.1/Unity.InternalAPIEngineBridge.013.dll",
+        "ref/netstandard2.1/Unity.Localization.dll",
+        "ref/netstandard2.1/Unity.Mathematics.dll",
+        "ref/netstandard2.1/Unity.MemoryProfiler.dll",
         "ref/netstandard2.1/Unity.Postprocessing.Runtime.dll",
+        "ref/netstandard2.1/Unity.Profiling.Core.dll",
         "ref/netstandard2.1/Unity.RenderPipelines.Core.Runtime.dll",
         "ref/netstandard2.1/Unity.RenderPipelines.Core.ShaderLibrary.dll",
         "ref/netstandard2.1/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll",
+        "ref/netstandard2.1/Unity.ResourceManager.dll",
+        "ref/netstandard2.1/Unity.ScriptableBuildPipeline.dll",
+        "ref/netstandard2.1/Unity.Splines.dll",
         "ref/netstandard2.1/Unity.TextMeshPro.dll",
         "ref/netstandard2.1/Unity.Timeline.dll",
         "ref/netstandard2.1/Unity.VisualScripting.Antlr3.Runtime.dll",
@@ -2906,7 +2938,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETStandard,Version=v2.1": [
+    "netstandard2.1": [
       "BepInEx.Analyzers >= 1.*",
       "BepInEx.AssemblyPublicizer.MSBuild >= 0.4.3",
       "BepInEx.Core >= 5.*",
@@ -2920,7 +2952,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.0.6",
+    "version": "2.0.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\imgog\\Desktop\\Mod REPO Emotes\\SomeEmotesREPO.csproj",
       "projectName": "SomeEmotesREPO",
@@ -2948,6 +2980,7 @@
       },
       "frameworks": {
         "netstandard2.1": {
+          "framework": "netstandard2.1",
           "targetAlias": "netstandard2.1",
           "projectReferences": {}
         }
@@ -2962,10 +2995,11 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.400"
     },
     "frameworks": {
       "netstandard2.1": {
+        "framework": "netstandard2.1",
         "targetAlias": "netstandard2.1",
         "dependencies": {
           "BepInEx.Analyzers": {
@@ -3017,7 +3051,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -15,10 +15,7 @@ namespace SomeEmotesREPO
         {
             if (GameManager.Multiplayer())
             {
-                if (GameManager.instance && GameManager.instance.connectRandom)
-                {
-                    SomeEmotesREPO.Logger.LogWarning($"CAUTION ! You are using a mod in a public lobby, people who doesn't have the mod and yourself can have some errors due to compatibility.");
-                }
+                EmoteNetwork.Listen();
 
                 var emoteSystem = __instance.GetComponent<EmoteSystem>();
                 if (!emoteSystem)

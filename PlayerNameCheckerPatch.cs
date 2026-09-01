@@ -12,7 +12,8 @@ namespace SomeEmotesREPO
         [HarmonyPrefix, HarmonyPatch(nameof(PlayerNameChecker.Update))]
         public static void Update_Prefix(PlayerNameChecker __instance)
         {
-            if (EmoteSystem.Instance && EmoteSystem.Instance.IsEmoting)
+            var emotes = EmoteSystem.Instance;
+            if (emotes != null && emotes.IsEmoting)
             {
                 __instance.checkTimer = 0.25f; // Force PlayerNameChecker.Update to never accomplish his task
             }

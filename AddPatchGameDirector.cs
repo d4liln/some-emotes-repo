@@ -12,10 +12,8 @@ namespace SomeEmotesREPO
         [HarmonyPatch(nameof(GameDirector.DeathStart))]
         private static void DeathStart_Prefix()
         {
-            if (EmoteSystem.Ready && EmoteSystem.Instance.IsEmoting)
-            {
-                EmoteSystem.Instance.StopEmote();
-            }
+            var emotes = EmoteSystem.Instance;
+            if (emotes != null && emotes.IsEmoting) emotes.StopEmote();
         }
 
     }

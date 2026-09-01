@@ -1,68 +1,50 @@
-﻿using Photon.Pun;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
+using Photon.Pun;
+using SomeEmotesREPO.Rig;
 using UnityEngine;
-using System;
 
 namespace SomeEmotesREPO
 {
     public class EmoteSystem : MonoBehaviourPun
     {
-        private bool isEmoting = false;
-        private int emoteId = -1;
-        private float emoteTime = 0f;
-        private float initialRot = 0f;
+        private const float BindDelay = 0.75f;
+        private const float CameraDistanceMin = 0.5f;
+        private const float CameraDistanceMax = 4f;
 
-        bool ready = false;
+        private static EmoteSystem? instance;
+        public static EmoteSystem? Instance => instance;
 
-        public static bool Ready
-        {
-            get
-            {
-                if (!instance) return false;
-                return instance.ready;
-            }
-        }
+        public static bool Ready => instance != null && instance.ready;
 
-        public bool IsEmoting
-        {
-            get
-            {
-                return isEmoting;
-            }
-            set
-            {
-                isEmoting = value;
+        private static float camOffset = 3.25f;
 
-                if (isEmoting)
-                {
-                    emoteTime = 0f;
-                }
-            }
-        }
+        private readonly EmoteRigPlayer _player = new EmoteRigPlayer();
 
-        private Transform camTransform;
+        private PlayerAvatar playerAvatar = null!;
+        private PlayerAvatarVisuals? playerVisuals;
+        private Transform? camTransform;
+        private bool ready;
 
-        private PlayerAvatar playerAvatar;
-        private PlayerAvatarVisuals playerVisuals;
+        private bool isEmoting;
+        private int currentEmote = -1;
+        private float frozenYaw;
 
-        private static float initalCamOffset = 3.25f;
-        private static float camOffset = initalCamOffset;
+        private bool controlArmed;
 
-        private static EmoteSystem instance;
-        public static EmoteSystem Instance => instance;
+        public bool IsEmoting => isEmoting;
 
-        private EmoteLauncher emoteLauncher;
-        private Animator animator;
+        public int CurrentEmote => currentEmote;
 
-        private PhotonView PV
-        {
-            get
-            {
-                return playerVisuals.playerAvatar.photonView;
-            }
-        }
+        public string CurrentEmoteName => EmoteCatalog.NameAt(currentEmote);
+
+        public float FrozenYaw => frozenYaw;
+
+        public int ViewId => photonView != null ? photonView.ViewID : 0;
+
+        public bool IsDead => playerAvatar == null || playerAvatar.deadSet;
+
+        private bool IsMine => photonView != null && photonView.IsMine;
 
         private void Awake()
         {
@@ -70,185 +52,172 @@ namespace SomeEmotesREPO
             if (Camera.main != null) camTransform = Camera.main.transform;
         }
 
-        public List<string> FetchEmotes(int startIndex, int count)
+        public void SetPlayerAvatar(PlayerAvatar avatar)
         {
-            return emoteLauncher.EmoteNames
-                .Skip(Math.Max(startIndex, 0))
-                .Take(Math.Max(count, 0))
-                .ToList();
+            playerAvatar = avatar;
+            StartCoroutine(Bind());
         }
 
-        public void SetFavorite(string fav)
+        private IEnumerator Bind()
         {
-            SetFavorites(new List<string>() { fav });
-        }
-        public void SetFavorites(List<string> favs)
-        {
-            emoteLauncher.SetFavorites(favs);
-        }
+            yield return new WaitForSeconds(BindDelay);
 
-        public void SetPlayerAvatar(PlayerAvatar pa)
-        {
-            playerAvatar = pa;
-            StartCoroutine(SetVisuals());
-        }
+            if (playerAvatar == null) yield break;
 
-        private IEnumerator SetVisuals()
-        {
-            yield return new WaitForSeconds(0.75f);
-
-            if (playerAvatar != null)
+            playerVisuals = EmoteRigPlayer.VisualsOf(playerAvatar);
+            if (playerVisuals == null)
             {
-                playerVisuals = playerAvatar.playerAvatarVisuals;
-                if (playerVisuals == null)
-                {
-                    playerVisuals = playerAvatar.transform.parent.GetComponentInChildren<PlayerAvatarVisuals>();
-                }
-
-                if (playerVisuals != null)
-                {
-                    animator = playerVisuals.GetComponentInChildren<Animator>();
-
-                    if (animator == null)
-                    {
-                        SomeEmotesREPO.Logger.LogWarning("Animator object not found on player visuals. Emote system visual features disabled.");
-                    }
-                }
+                SomeEmotesREPO.Logger.LogWarning("[Emote] No PlayerAvatarVisuals on this avatar; emotes are disabled for it.");
+                yield break;
             }
 
-            if (PV.IsMine)
+            EmoteCatalog.Load();
+            if (!EmoteCatalog.Loaded)
+            {
+                SomeEmotesREPO.Logger.LogError("[Emote] No emote loaded; the system stays off.");
+                yield break;
+            }
+
+            if (IsMine)
             {
                 instance = this;
-            }
-
-            if (GameManager.Multiplayer())
-            {
-                emoteLauncher = EmoteLoader.Instance.LoadEmote(playerAvatar);
-                emoteLauncher.emoteSystem = this;
+                EmoteNetwork.SendStateRequest();
             }
 
             ready = true;
         }
 
-        public void PlayEmote(string emoteId)
-        {
-            if (!PV.IsMine) return;
+        public void SetFavorite(string favorite) => SetFavorites(new List<string> { favorite });
 
-            EmoteSelectionManager.Instance.SetVisible(false);
-            IsEmoting = true;
-            photonView.RPC(nameof(RPC_PlayEmote), RpcTarget.All, emoteId, initialRot);
+        public void SetFavorites(List<string> favorites) => EmoteLoader.Instance?.AddFavorites(favorites);
+        public void PlayEmote(string emoteName)
+        {
+            int index = EmoteCatalog.IndexOf(emoteName);
+            if (index < 0)
+            {
+                SomeEmotesREPO.Logger.LogWarning($"[Emote] Unknown emote '{emoteName}'.");
+                return;
+            }
+            PlayEmote(index);
+        }
+
+        public void PlayEmote(int emoteIndex)
+        {
+            if (!ready || !IsMine || !EmoteCatalog.IsValid(emoteIndex)) return;
+
+            EmoteWheel.Instance?.Close();
+
+            float yaw = playerAvatar.transform.eulerAngles.y;
+
+            ApplyPlay(emoteIndex, yaw);
+            EmoteNetwork.SendPlay(photonView, EmoteCatalog.NameAt(emoteIndex), yaw);
         }
 
         public void StopEmote()
         {
-            if (!PV.IsMine) return;
+            if (!IsMine || !isEmoting) return;
 
-            EmoteSelectionManager.Instance.SetVisible(false);
-            IsEmoting = false;
-            photonView.RPC(nameof(RPC_StopEmote), RpcTarget.All);
+            EmoteWheel.Instance?.Close();
+            ApplyStop();
+            EmoteNetwork.SendStop(photonView);
         }
 
-        [PunRPC]
-        private void RPC_PlayEmote(string emoteId, float _initialRot)
+        internal void ApplyPlay(int emoteIndex, float yaw)
         {
-            // Ignores if emotes are disabled by the client
-            //if (!PV.IsMine && SomeEmotesREPO.ConfigActiveEmoteSystem.Value == false) return;
+            if (!ready || playerAvatar == null) return;
 
-            IsEmoting = true;
+            AnimationClip? clip = EmoteCatalog.ClipAt(emoteIndex);
+            if (clip == null) return;
 
-            emoteLauncher.SetRotation(_initialRot);
-            emoteLauncher.Animate(emoteId);
-            SomeEmotesREPO.Logger.LogInfo($"[{photonView.Owner.NickName}] played emote {emoteId}.");
+            if (!_player.Play(playerAvatar, clip, Quaternion.Euler(0f, yaw, 0f))) return;
+
+            currentEmote = emoteIndex;
+            frozenYaw = yaw;
+            isEmoting = true;
+            controlArmed = false;
+
+            SomeEmotesREPO.Logger.LogInfo($"[Emote] {OwnerName()} plays '{EmoteCatalog.NameAt(emoteIndex)}'.");
         }
 
-        [PunRPC]
-        private void RPC_StopEmote()
+        internal void ApplyStop()
         {
-            IsEmoting = false;
-
-            emoteLauncher.StopEmote();
+            isEmoting = false;
+            currentEmote = -1;
+            _player.Stop();
         }
 
-        void Update()
+        private void Update()
         {
             if (!ready) return;
 
-            if (IsEmoting)
+            if (IsMine)
             {
-                emoteTime += Time.deltaTime;
-
-                if (IsPlayerTakeControlBack())
+                if (isEmoting)
                 {
-                    IsEmoting = false;
-                    StopEmote();
-                }
-            }
+                    bool suppressed = InputManager.instance != null
+                                   && InputManager.instance.disableMovementTimer > 0f;
 
-            if (PV.IsMine && camTransform)
-            {
-                if (isEmoting) camTransform.localPosition = new Vector3(0f, 0f, -camOffset);
-                else camTransform.localPosition = Vector3.zero;
-
-                float scroll = Input.mouseScrollDelta.y;
-                if (scroll != 0f)
-                {
-                    camOffset -= scroll * Time.deltaTime * 20f;
-                    camOffset = Mathf.Clamp(camOffset, 0.5f, 4f); 
-                }
-            }
-
-            if (playerVisuals)
-            {
-                if (PV.IsMine && !playerAvatar.deadSet && Input.GetKeyDown(EmoteLoader.PanelKey) && !ChatManager.instance.chatActive)
-                {
-                    EmoteSelectionManager.Instance.SetVisible(!EmoteSelectionManager.Instance.Visible);
+                    if (!controlArmed) controlArmed = !suppressed && !TookControlBack();
+                    else if (TookControlBack()) StopEmote();
                 }
 
-                if (!PV.IsMine)
+                if (camTransform != null)
                 {
-                    if (animator != null)
+                    camTransform.localPosition = new Vector3(0f, 0f, -camOffset * _player.Weight);
+
+                    bool choosing = EmoteWheel.Instance != null && EmoteWheel.Instance.Visible;
+
+                    if (_player.Active && !choosing)
                     {
-                        animator.enabled = !IsEmoting;
+                        float scroll = Input.mouseScrollDelta.y;
+                        if (scroll != 0f)
+                        {
+                            camOffset = Mathf.Clamp(camOffset - scroll * Time.deltaTime * 20f, CameraDistanceMin, CameraDistanceMax);
+                        }
                     }
-                    playerVisuals.meshParent.SetActive(!IsEmoting);
                 }
-                else
-                {
-                    //according to repo PlayerAvatarVisuals.Start(), ignores the visuals for the client (always hidden)
 
-                    initialRot = playerAvatar.transform.eulerAngles.y;
-                }
             }
         }
 
-        public bool IsPlayerTakeControlBack()
+        private void LateUpdate()
         {
-            if (!PV.IsMine)
-                return false;
-
-            Vector2 move = InputManager.instance.GetMovement();
-            if (move.sqrMagnitude > 0.01f)
-                return true;
-
-            if (InputManager.instance.KeyDown(InputKey.Jump) ||
-                InputManager.instance.KeyDown(InputKey.Interact) ||
-                InputManager.instance.KeyDown(InputKey.Sprint) ||
-                InputManager.instance.KeyDown(InputKey.Crouch) ||
-                InputManager.instance.KeyDown(InputKey.Tumble))
+            if (_player.Active)
             {
-                return true;
-            }
+                if (IsMine && playerVisuals != null) playerVisuals.ShowSelfOverride(0.1f);
 
-            return false;
+                _player.Tick(Time.deltaTime);
+            }
+            if (isEmoting && !_player.Playing)
+            {
+                isEmoting = false;
+                currentEmote = -1;
+                if (IsMine && photonView != null) EmoteNetwork.SendStop(photonView);
+            }
         }
 
-        public void OnDestroy()
+        private bool TookControlBack()
         {
-            if (emoteLauncher != null)
-            {
-                Destroy(emoteLauncher.gameObject);
-            }
+            if (InputManager.instance == null) return false;
+
+            if (InputManager.instance.GetMovement().sqrMagnitude > 0.01f) return true;
+
+            return InputManager.instance.KeyDown(InputKey.Jump)
+                || InputManager.instance.KeyDown(InputKey.Interact)
+                || InputManager.instance.KeyDown(InputKey.Sprint)
+                || InputManager.instance.KeyDown(InputKey.Crouch)
+                || InputManager.instance.KeyDown(InputKey.Tumble);
+        }
+
+        private string OwnerName()
+        {
+            return photonView != null && photonView.Owner != null ? photonView.Owner.NickName : name;
+        }
+
+        private void OnDestroy()
+        {
+            _player.Dispose();
+            if (instance == this) instance = null;
         }
     }
 }
-

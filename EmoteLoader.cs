@@ -1,148 +1,152 @@
-﻿using BepInEx;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using BepInEx;
 using UnityEngine;
 
 namespace SomeEmotesREPO
 {
     public class EmoteLoader : MonoBehaviour
     {
-        private AssetBundle assetBundle;
+        private const string PreferencesFileName = "preferences.json";
 
-        private static EmoteLoader instance;
-        public static EmoteLoader Instance {  get { return instance;  } }
+        private static EmoteLoader? instance;
+        public static EmoteLoader? Instance => instance;
 
-        public List<string> emotesName = new List<string>();
+        private AssetBundle? assetBundle;
+        private Preferences preferences = new Preferences();
+        private string preferencesPath = string.Empty;
 
-        private Preferences emotesPreferences;
+        public static KeyCode PanelKey => instance != null ? instance.preferences.panelKey : KeyCode.P;
 
-        public static KeyCode PanelKey => instance != null && instance.emotesPreferences != null ? instance.emotesPreferences.panelKey : KeyCode.P;
-
-        public int TotalPages
+        public static List<string> DisplayOrder()
         {
-            get
-            {
-                return Mathf.CeilToInt(emotesName.Count / EmoteSelectionManager.emotePerPages);
-            }
+            return EmoteCatalog.DisplayOrder(instance?.preferences.farovites);
         }
 
-        void Awake()
+        public static IList<string> Favourites()
+        {
+            return instance != null ? instance.preferences.farovites : new List<string>();
+        }
+
+        private void Awake()
         {
             instance = this;
         }
 
-        void Start()
+        private void Start()
         {
-            var pluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var bundlePath = Path.Combine(pluginFolder, "emotes.bundle");
+            string pluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Paths.PluginPath;
 
-            assetBundle = EmoteBundleLoader.Load(bundlePath);
-            if (assetBundle == null)
+            assetBundle = LoadBundle(pluginFolder);
+
+            preferencesPath = Path.Combine(pluginFolder, PreferencesFileName);
+            LoadPreferences();
+        }
+
+        /// <summary>
+        /// Finds the emote bundle wherever the Unity build happened to put it.
+        ///
+        /// Unity names the built file after the bundle, with no extension, so a bundle
+        /// called "emotes" ships as "emotes" and one called "emotes.bundle" ships as
+        /// "emotes.bundle". Both spellings have shipped with this mod. Trying the four
+        /// combinations costs nothing and turns a rebuild that silently produces a mod
+        /// with no emotes at all into a non-event.
+        /// </summary>
+        private static AssetBundle? LoadBundle(string pluginFolder)
+        {
+            string[] candidates =
             {
-                bundlePath = Path.Combine(pluginFolder, "Emotes", "emotes.bundle");
-                assetBundle = EmoteBundleLoader.Load(bundlePath);
+                Path.Combine(pluginFolder, "emotes.bundle"),
+                Path.Combine(pluginFolder, "emotes"),
+                Path.Combine(pluginFolder, "Emotes", "emotes.bundle"),
+                Path.Combine(pluginFolder, "Emotes", "emotes"),
+            };
+
+            foreach (string path in candidates)
+            {
+                if (!File.Exists(path)) continue;
+
+                var bundle = EmoteBundleLoader.Load(path);
+                if (bundle != null)
+                {
+                    SomeEmotesREPO.Logger.LogInfo($"Emote bundle loaded from {path}.");
+                    return bundle;
+                }
             }
 
-            var preferencesPath = Path.Combine(pluginFolder, "preferences.json");
+            SomeEmotesREPO.Logger.LogError(
+                $"No emote bundle found in {pluginFolder}. Looked for 'emotes' and 'emotes.bundle', "
+                + "at the top level and under Emotes/. No emote will be available.");
+            return null;
+        }
+
+        public static Font? GetFont()
+        {
+            return instance?.assetBundle?.LoadAllAssets<Font>().FirstOrDefault(f => f.name.ToLower().Contains("teko-regular"));
+        }
+
+        private void LoadPreferences()
+        {
             try
             {
-                string content = File.ReadAllText(preferencesPath);
-                emotesPreferences = JsonUtility.FromJson<Preferences>(content);
+                preferences = JsonUtility.FromJson<Preferences>(File.ReadAllText(preferencesPath)) ?? new Preferences();
+                Migrate();
             }
-            catch
+            catch (System.Exception)
             {
-                SomeEmotesREPO.Logger.LogInfo("No preferences file found, creating one.");
-                emotesPreferences = new Preferences();
+                SomeEmotesREPO.Logger.LogInfo("No usable preferences file, creating one.");
+                preferences = new Preferences();
                 SavePreferences();
             }
         }
-
-        public static Font GetFont()
+        private void Migrate()
         {
-            return instance.assetBundle.LoadAllAssets<Font>().First(f => f.name.ToLower().Contains("teko-regular"));
+            if (preferences.version >= Preferences.CurrentVersion) return;
+
+            KeyCode previous = preferences.panelKey;
+            preferences.panelKey = new Preferences().panelKey;
+            preferences.version = Preferences.CurrentVersion;
+            SavePreferences();
+
+            SomeEmotesREPO.Logger.LogInfo(
+                $"Emote key moved from [{previous}] to [{preferences.panelKey}]. Change it in {PreferencesFileName} if you prefer the old one.");
         }
-        
+
         public void SavePreferences()
         {
-            var preferencesPath = Path.Combine(Paths.PluginPath, "ImGogole-SomeEmotesREPO", "preferences.json");
-            string content = JsonUtility.ToJson(emotesPreferences);
-            File.WriteAllText(preferencesPath, content);
-        }
-
-        public void SetFavorites(List<string> favs)
-        {
-            emotesPreferences.farovites = favs;
-            SavePreferences();
-        }
-
-        public EmoteLauncher LoadEmote(PlayerAvatar playerAvatar)
-        {
-            if (assetBundle == null)
+            try
             {
-                SomeEmotesREPO.Logger.LogError("Unable to load emotes.bundle");
-                return null;
+                File.WriteAllText(preferencesPath, JsonUtility.ToJson(preferences));
             }
-
-            emotesName.Clear();
-
-            //first we get the prefab, it contains the repo model with an animator
-            GameObject emotePrefab = EmoteBundleLoader.LoadAsset<GameObject>("emote.prefab");
-
-            if (emotePrefab == null)
+            catch (IOException e)
             {
-                SomeEmotesREPO.Logger.LogError("Prefab emote not found");
-                return null;
+                SomeEmotesREPO.Logger.LogWarning($"Could not save {PreferencesFileName}: {e.Message}");
             }
+        }
+        public void AddFavorites(List<string>? favorites)
+        {
+            if (favorites == null || favorites.Count == 0) return;
 
-            GameObject emoteInstance = Instantiate(emotePrefab, Vector3.zero, Quaternion.identity);
+            var updated = new List<string>(preferences.farovites);
+            bool changed = false;
 
-            //then for this object, we add him the EmoteLauncher component. This component allows himself to play the
-            //asked emote
-            EmoteLauncher emoteLauncher = emoteInstance.AddComponent<EmoteLauncher>();
-
-            var animNames = EmoteBundleLoader.GetAllAnimNames();
-
-            //we search every anim in the assetbundle, check them then add them into out emote launcher
-            foreach (string name in animNames)
+            foreach (string name in favorites)
             {
-                string emoteName = ExtractElement(name);
-                if (string.IsNullOrWhiteSpace(emoteName))
+                if (EmoteCatalog.IndexOf(name) < 0) continue;
+                if (updated.Remove(name)) changed = true;
+                else
                 {
-                    continue;
+                    updated.Insert(0, name);
+                    changed = true;
                 }
-                emoteLauncher.AddEntry(emoteName, EmoteBundleLoader.LoadAsset<AnimationClip>(name));
-                emotesName.Add(emoteName);
             }
+            if (!changed) return;
 
-            //init the launcher
-            emoteLauncher.Init(playerAvatar.transform); //dumbass method
-            emoteLauncher.SetFavorites(emotesPreferences.farovites);
-
-            // set the textures from the character
-            emoteLauncher.InitTexturesFrom(playerAvatar.transform.parent.gameObject);
-
-            //SomeEmotesREPO.Logger.LogInfo($"Created emote for {playerAvatar.photonView.Owner.NickName} with loaded emotes : {string.Join(", ", emotesName)}");
-
-            return emoteLauncher;
-        }
-
-        public static string ExtractElement(string path)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-                return string.Empty;
-
-            string lastSegment = path.Trim();
-            int lastSlash = lastSegment.LastIndexOf('/');
-            if (lastSlash >= 0)
-                lastSegment = lastSegment.Substring(lastSlash + 1);
-
-            if (lastSegment.EndsWith(".anim", StringComparison.OrdinalIgnoreCase))
-                lastSegment = lastSegment.Substring(0, lastSegment.Length - ".anim".Length);
-
-            return lastSegment;
+            int max = Mathf.Min(EmoteWheel.Slots, updated.Count);
+            preferences.farovites = updated.GetRange(0, max);
+            SavePreferences();
         }
     }
 }
@@ -150,6 +154,8 @@ namespace SomeEmotesREPO
 [System.Serializable]
 public class Preferences
 {
+    public const int CurrentVersion = 1;
     public List<string> farovites = new List<string>();
-    public KeyCode panelKey = KeyCode.P;
+    public KeyCode panelKey = KeyCode.E;
+    public int version;
 }

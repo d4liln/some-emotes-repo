@@ -1,36 +1,54 @@
-# SomeEmotesREPO 1.0.6 - by ImGogole
+# SomeEmotesREPO v2 - ImGogole
 
-**SomeEmotesREPO** is a mod for the game **R.E.P.O.** that allows players to perform custom emotes.
+A mod for R.E.P.O. that lets players dance.
 
-> ⚠️ This mod is currently in development and may contain bugs. As long as it remains open-source, you're welcome to contribute via pull requests.
+Version 2.0.0 changes how emotes are played. They now run on your own avatar instead of
+on a hidden copy of it, so your cosmetics, health bar and crown stay with you while you
+dance, and your head still moves when you talk.
 
----
+The mod is open source and still in development. Pull requests are welcome.
 
-## 🛠️ Installation
+## Installation
 
-The easiest way to install the mod is through the [Thunderstore Mod Manager](https://www.overwolf.com/app/thunderstore-thunderstore_mod_manager), which provides everything you need to mod R.E.P.O.
+The simplest way is the [Thunderstore Mod Manager](https://www.overwolf.com/app/thunderstore-thunderstore_mod_manager),
+which installs BepInEx and the mod together.
 
-If the mod is not yet available on the store, you can install it manually:
-
-1. Download the release.
-2. Move it to the following directory:
+To install by hand, download the release and unzip it into your profile's plugin
+folder:
 
 ```
-%AppData%\Roaming\Thunderstore Mod Manager\DataFolder\REPO\profiles\<YourProfileName>\BepInEx\plugins
+%AppData%\Thunderstore Mod Manager\DataFolder\REPO\profiles\<profile>\BepInEx\plugins
 ```
 
-> Replace `<YourProfileName>` with the actual name of the profile you're using.
+## Playing an emote
 
----
+Hold `E` to open the emote wheel, point at a dance with the mouse, and release to play
+it. Release near the middle to cancel.
 
-## 🎮 How to Use
+- Scroll to turn the page.
+- Right click a dance to pin it as a favourite; favourites fill the first page. Right
+  click it again to unpin it.
+- Moving, jumping or grabbing something ends the emote.
 
-- In-game, press the **`P`** key to open the Emote Panel.
-- A list of emotes will appear; simply press the corresponding number key to play the emote.
-- Moving your character will interrupt and cancel the current emote.
+The camera pulls back while you dance so you can see your own avatar. Scroll to change
+how far.
 
-## 💻 Support
+## Multiplayer
 
-- It is recommended to use this mod with all of your friends in a private room.
-- Playing with a mod in a public lobby when other players do not have the mod can cause problems and errors for them and for you.
-- The mod is not supported in singleplayer mode.
+Players without the mod see nothing and get no errors, so a public lobby is safe.
+
+Players who do have it should be on the same version. Emotes are identified by name, so
+two installs with different dances skip the ones they do not share instead of playing
+the wrong one. A 1.x player and a 2.x player will not see each other's emotes at all.
+
+Singleplayer is not supported.
+
+## Configuration
+
+In `BepInEx/config/ImGogole.SomeEmotesREPO.cfg`:
+
+- `Wheel / Sensitivity` sets how far the mouse has to travel to reach the outer dances.
+- `Debug / RigProbe` enables a development tool for inspecting the avatar rig. It is off
+  by default and needs a restart.
+
+The emote key and your favourites are stored in `preferences.json`, next to the mod.

@@ -1,9 +1,4 @@
 ﻿using HarmonyLib;
-using Photon.Pun;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 
 namespace SomeEmotesREPO
 {

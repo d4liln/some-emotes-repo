@@ -23,7 +23,8 @@ namespace SomeEmotesREPO
         }
         private static bool BlockBecauseEmoteIsPlaying()
         {
-            return EmoteSystem.Ready && EmoteSystem.Instance.IsEmoting;
+            var emotes = EmoteSystem.Instance;
+            return emotes != null && emotes.IsEmoting;
         }
     }
 }
