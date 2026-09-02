@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ImGogole")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.0.0+cc6357cd1d83cc330526d7e940df49fd8e3f338c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.0.0+7294ff5ab2e9f0717702e0aaa56ff075c997b5fe")]
 [assembly: System.Reflection.AssemblyProductAttribute("SomeEmotesREPO")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SomeEmotesREPO")]
 [assembly: System.Reflection.AssemblyVersionAttribute("2.0.0.0")]
