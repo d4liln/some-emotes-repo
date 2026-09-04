@@ -18,8 +18,6 @@ namespace SomeEmotesREPO
         private Preferences preferences = new Preferences();
         private string preferencesPath = string.Empty;
 
-        public static KeyCode PanelKey => instance != null ? instance.preferences.panelKey : KeyCode.P;
-
         public static List<string> DisplayOrder()
         {
             return EmoteCatalog.DisplayOrder(instance?.preferences.farovites);
@@ -45,15 +43,6 @@ namespace SomeEmotesREPO
             LoadPreferences();
         }
 
-        /// <summary>
-        /// Finds the emote bundle wherever the Unity build happened to put it.
-        ///
-        /// Unity names the built file after the bundle, with no extension, so a bundle
-        /// called "emotes" ships as "emotes" and one called "emotes.bundle" ships as
-        /// "emotes.bundle". Both spellings have shipped with this mod. Trying the four
-        /// combinations costs nothing and turns a rebuild that silently produces a mod
-        /// with no emotes at all into a non-event.
-        /// </summary>
         private static AssetBundle? LoadBundle(string pluginFolder)
         {
             string[] candidates =
@@ -89,29 +78,58 @@ namespace SomeEmotesREPO
 
         private void LoadPreferences()
         {
+            string json;
             try
             {
-                preferences = JsonUtility.FromJson<Preferences>(File.ReadAllText(preferencesPath)) ?? new Preferences();
-                Migrate();
+                json = File.ReadAllText(preferencesPath);
             }
             catch (System.Exception)
             {
                 SomeEmotesREPO.Logger.LogInfo("No usable preferences file, creating one.");
                 preferences = new Preferences();
                 SavePreferences();
+                return;
             }
+
+            try
+            {
+                preferences = JsonUtility.FromJson<Preferences>(json) ?? new Preferences();
+            }
+            catch (System.Exception)
+            {
+                preferences = new Preferences();
+            }
+
+            Migrate(json);
         }
-        private void Migrate()
+
+        private void Migrate(string json)
         {
             if (preferences.version >= Preferences.CurrentVersion) return;
 
-            KeyCode previous = preferences.panelKey;
-            preferences.panelKey = new Preferences().panelKey;
+            if (preferences.version == 1)
+            {
+                KeyCode chosen = KeyCode.None;
+                try
+                {
+                    var legacy = JsonUtility.FromJson<LegacyPreferences>(json);
+                    if (legacy != null) chosen = legacy.panelKey;
+                }
+                catch (System.Exception) { }
+
+                string name = chosen.ToString();
+                if (chosen != KeyCode.None && chosen != KeyCode.E
+                    && SomeEmotesREPO.EmoteKey.Value == SomeEmotesREPO.DefaultEmoteKey
+                    && System.Array.IndexOf(SomeEmotesREPO.BindableKeys, name) >= 0)
+                {
+                    SomeEmotesREPO.EmoteKey.Value = name;
+                    SomeEmotesREPO.Logger.LogInfo(
+                        $"Your [{name}] emote key moved out of {PreferencesFileName} and into the config, under 'Emote wheel / Key'.");
+                }
+            }
+
             preferences.version = Preferences.CurrentVersion;
             SavePreferences();
-
-            SomeEmotesREPO.Logger.LogInfo(
-                $"Emote key moved from [{previous}] to [{preferences.panelKey}]. Change it in {PreferencesFileName} if you prefer the old one.");
         }
 
         public void SavePreferences()
@@ -154,8 +172,13 @@ namespace SomeEmotesREPO
 [System.Serializable]
 public class Preferences
 {
-    public const int CurrentVersion = 1;
+    public const int CurrentVersion = 2;
     public List<string> farovites = new List<string>();
-    public KeyCode panelKey = KeyCode.E;
     public int version;
+}
+
+[System.Serializable]
+public class LegacyPreferences
+{
+    public KeyCode panelKey = KeyCode.None;
 }

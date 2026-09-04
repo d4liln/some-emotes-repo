@@ -25,16 +25,6 @@ namespace SomeEmotesREPO.Rig
 
     public sealed class EmoteProxyRig : MonoBehaviour
     {
-        /// <summary>
-        /// The clip in the bundle's controller that gets swapped for the emote.
-        ///
-        /// Taken from the controller rather than named in code. It used to be the literal
-        /// string "Placeholder", and that is a trap: the string indexer of an
-        /// AnimatorOverrideController looks the clip up by name and, finding nothing,
-        /// does nothing at all. No exception, no warning. Every emote then "played"
-        /// successfully while the proxy stood still, and the avatar froze with it. A
-        /// rebuilt controller whose clip is called anything else is enough to cause it.
-        /// </summary>
         private AnimationClip? _slot;
 
         private static readonly string[] BoneNames =
@@ -161,11 +151,6 @@ namespace SomeEmotesREPO.Rig
             }
             SomeEmotesREPO.Logger.LogInfo($"[Solver] Emote clips will replace '{_slot.name}' in the controller.");
 
-            // A humanoid muscle clip can only be evaluated through a humanoid Avatar. If
-            // the prefab lost its Avatar in a rebuild, or the clips came back from the
-            // importer as generic, the animator runs and writes nothing: no error, no
-            // warning, and a proxy frozen in its bind pose. These two flags are the only
-            // way to tell that apart from a controller that never transitions.
             var parameters = new System.Collections.Generic.List<string>();
             foreach (var parameter in _animator.parameters) parameters.Add(parameter.name);
 
@@ -176,10 +161,6 @@ namespace SomeEmotesREPO.Rig
 
             if (!_animator.isHuman)
             {
-                // Refusing beats carrying on. Without an Avatar the clips write nothing,
-                // the proxy holds its bind pose, and the solver copies that onto the
-                // player every frame: the avatar freezes instead of simply not dancing,
-                // which reads as the mod being broken rather than the emote being absent.
                 SomeEmotesREPO.Logger.LogError(
                     "[Solver] The dancer prefab has no humanoid Avatar, so no emote can play. "
                     + "In Unity, select Emote.prefab, and set the Avatar field on its Animator to the "
@@ -218,8 +199,6 @@ namespace SomeEmotesREPO.Rig
 
         public void Stop()
         {
-            // Reached from OnDestroy on a level change, by which point Unity may already
-            // have taken the animator away.
             if (_animator != null) _animator.SetTrigger("StopEmote");
             CurrentClip = string.Empty;
         }

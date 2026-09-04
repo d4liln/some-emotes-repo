@@ -5,10 +5,6 @@ using UnityEngine;
 
 namespace SomeEmotesREPO.Rig
 {
-    /// <summary>
-    /// The bones of a REPO player avatar that the game drives through its Animator.
-    /// Order matters: it is the order the debug overlay and rigpose.json use.
-    /// </summary>
     public enum RigBone
     {
         Root = 0,
@@ -27,25 +23,6 @@ namespace SomeEmotesREPO.Rig
         HeadTop,
     }
 
-    /// <summary>
-    /// Resolves the animator-driven bones of a live PlayerAvatarVisuals.
-    ///
-    /// The avatar rig interleaves two families of transforms:
-    ///   "ANIM *"  written by the game Animator, from generic clips bound by path.
-    ///   "code_*"  written by the game's C# every Update: springs, lean, look-at,
-    ///             and code_head_top, which PlayerAvatarTalkAnimation rotates from
-    ///             the voice chat loudness.
-    /// Because they alternate as parent and child, writing the ANIM nodes in
-    /// LateUpdate composes with the code_ nodes instead of fighting them: the voice
-    /// head motion, the eye look-at and every cosmetic spring keep running on top
-    /// of whatever pose we push.
-    ///
-    /// Verified against REPO on Unity 2022.3.45f1 (resources.assets, GameObject
-    /// "Player Visuals"): each "ANIM *" name occurs exactly once inside the avatar,
-    /// and each one sits at identity in the prefab. The 37-underscore spacer parents
-    /// carry all of the rest geometry. So lookup by name is unambiguous, and writing
-    /// identity to a bone means "rest pose", not "collapse to the origin".
-    /// </summary>
     public sealed class RepoRigBinder
     {
         public const int BoneCount = 14;
@@ -68,10 +45,6 @@ namespace SomeEmotesREPO.Rig
             "ANIM HEAD TOP",
         };
 
-        /// <summary>
-        /// Animator-driven too, but owned by PlayerEyes and PlayerAvatarEyelids.
-        /// We never write these: blinking and gaze must stay the game's job.
-        /// </summary>
         private static readonly string[] ReservedNames =
         {
             "ANIM EYE LEFT",
@@ -82,11 +55,6 @@ namespace SomeEmotesREPO.Rig
             "ANIM PUPIL RIGHT SCALE",
         };
 
-        /// <summary>
-        /// Not a bone we drive. It is the transform PlayerAvatarTalkAnimation rotates
-        /// from the microphone, and it hangs under ANIM HEAD TOP. Reading it while we
-        /// force a pose is the direct proof that the voice motion survives.
-        /// </summary>
         private const string TalkWitnessName = "code_head_top";
 
         private readonly Transform[] _bones = new Transform[BoneCount];
@@ -104,10 +72,6 @@ namespace SomeEmotesREPO.Rig
 
         public static string NameOf(RigBone bone) => BoneNames[(int)bone];
 
-        /// <summary>
-        /// Walks the avatar once and binds every ANIM bone by name.
-        /// Fails loudly rather than half-binding: a partial rig would deform the player.
-        /// </summary>
         public static bool TryBind(PlayerAvatarVisuals visuals, out RepoRigBinder? binder, out string error)
         {
             binder = null;
@@ -171,7 +135,6 @@ namespace SomeEmotesREPO.Rig
         {
             if (name.Length == 0) return false;
             if (string.Equals(name, TalkWitnessName, StringComparison.Ordinal)) return true;
-            // Cheap prefix reject before the exact-name comparisons below.
             if (name[0] != 'A') return false;
 
             for (int i = 0; i < BoneNames.Length; i++)
@@ -180,11 +143,6 @@ namespace SomeEmotesREPO.Rig
             }
             return false;
         }
-
-        /// <summary>
-        /// Returns every ANIM node to its prefab rest value. Used when releasing the rig:
-        /// bones the current game clip does not animate would otherwise stay where we left them.
-        /// </summary>
         public void ResetToRest()
         {
             for (int i = 0; i < BoneCount; i++)
@@ -193,19 +151,10 @@ namespace SomeEmotesREPO.Rig
                 if (t == null) continue;
                 t.localRotation = Quaternion.identity;
                 t.localScale = Vector3.one;
-                // Every bound bone rests at the origin of its offset parent, measured on
-                // the live rig; only the pupils carry an offset, and those are reserved.
-                // Without this the avatar would stay crouched after an emote that lowered
-                // ANIM BOT, since not every game clip writes that channel back.
                 t.localPosition = Vector3.zero;
             }
         }
 
-        /// <summary>
-        /// Full diagnostic dump. This is the thing to paste in an issue when a REPO
-        /// update renames a node: it shows the path each bone resolved to, and which
-        /// reserved eye nodes are present.
-        /// </summary>
         public string Describe()
         {
             var sb = new StringBuilder();

@@ -46,12 +46,6 @@ namespace SomeEmotesREPO
                     SomeEmotesREPO.Logger.LogWarning($"[Catalog] '{entry.Key}' could not be loaded, skipped.");
                     continue;
                 }
-
-                // Loop Time left off in the import settings makes a dance play once and
-                // then hold its last frame, which on screen is a player standing oddly
-                // still. Nothing here can fix it, since looping is baked at import, but
-                // naming the clip turns a puzzling emote into a one-line answer.
-                // Generic clips drive nothing on a humanoid avatar, silently.
                 if (!clip.isHumanMotion)
                 {
                     SomeEmotesREPO.Logger.LogWarning(

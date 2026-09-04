@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "SomeEmotesREPO/2.0.0": {
+      "SomeEmotesREPO/2.0.1": {
         "dependencies": {
           "R.E.P.O.GameLibs.Steam": "0.4.4-ngd.0"
         },
@@ -31,7 +31,7 @@
     }
   },
   "libraries": {
-    "SomeEmotesREPO/2.0.0": {
+    "SomeEmotesREPO/2.0.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

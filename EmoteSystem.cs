@@ -34,6 +34,8 @@ namespace SomeEmotesREPO
 
         public bool IsEmoting => isEmoting;
 
+        internal bool flashlightHeld;
+
         public int CurrentEmote => currentEmote;
 
         public string CurrentEmoteName => EmoteCatalog.NameAt(currentEmote);

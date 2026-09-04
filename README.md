@@ -1,8 +1,8 @@
-# SomeEmotesREPO v2 - ImGogole
+﻿# SomeEmotesREPO v2 - ImGogole
 
 A mod for R.E.P.O. that lets players dance.
 
-Version 2.0.0 changes how emotes are played. They now run on your own avatar instead of
+Version 2.0.1 changes how emotes are played. They now run on your own avatar instead of
 on a hidden copy of it, so your cosmetics, health bar and crown stay with you while you
 dance, and your head still moves when you talk.
 
@@ -22,8 +22,8 @@ folder:
 
 ## Playing an emote
 
-Hold `E` to open the emote wheel, point at a dance with the mouse, and release to play
-it. Release near the middle to cancel.
+Hold `F` to open the emote wheel, point at a dance with the mouse, and release to play
+it. Release near the middle to cancel. The key can be changed in the configuration.
 
 - Scroll to turn the page.
 - Right click a dance to pin it as a favourite; favourites fill the first page. Right
@@ -45,10 +45,14 @@ Singleplayer is not supported.
 
 ## Configuration
 
-In `BepInEx/config/ImGogole.SomeEmotesREPO.cfg`:
+In `BepInEx/config/ImGogole.SomeEmotesREPO.cfg`, or in game through
+[REPOConfig](https://thunderstore.io/c/repo/p/nickklmao/REPOConfig/), which the mod
+installs alongside itself:
 
-- `Wheel / Sensitivity` sets how far the mouse has to travel to reach the outer dances.
-- `Debug / RigProbe` enables a development tool for inspecting the avatar rig. It is off
-  by default and needs a restart.
+- `Emote wheel / Key` is the key held down to open the wheel, `F` by default. Mouse
+  buttons can be bound too: `Mouse2` is the middle button, `Mouse3` and `Mouse4` the
+  side ones.
+- `Emote wheel / Sensitivity` sets how far the mouse has to travel to reach the outer
+  dances.
 
-The emote key and your favourites are stored in `preferences.json`, next to the mod.
+Your favourites are stored in `preferences.json`, next to the mod.

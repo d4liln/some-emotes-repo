@@ -4,10 +4,6 @@ using UnityEngine;
 
 namespace SomeEmotesREPO.Rig
 {
-    /// <summary>
-    /// One bone of a hand-authored pose. Angles are local eulers, in the bone's own
-    /// space, applied on top of the rest pose (which is identity for every ANIM node).
-    /// </summary>
     [Serializable]
     public class RigBonePose
     {
@@ -15,19 +11,11 @@ namespace SomeEmotesREPO.Rig
         public Vector3 euler = Vector3.zero;
         public Vector3 scale = Vector3.one;
 
-        /// <summary>False leaves this bone to the game Animator, so you can A/B a single joint.</summary>
         public bool driven = true;
 
-        /// <summary>Scale is only meaningful on the *_SCALE and *_TOP nodes; off by default.</summary>
         public bool applyScale = false;
     }
 
-    /// <summary>
-    /// The whole pose, as it lives in rigpose.json next to the plugin DLL.
-    /// This is a phase 1 tuning file, not a shipped asset: it exists so the rig can be
-    /// explored in-game without a rebuild, and so the angles found here can be reused
-    /// as the starting calibration of the solver in phase 3.
-    /// </summary>
     [Serializable]
     public class RigPoseFile
     {
@@ -44,10 +32,6 @@ namespace SomeEmotesREPO.Rig
             return file;
         }
 
-        /// <summary>
-        /// Reads the file into the flat arrays the driver uses. Unknown or missing bone
-        /// names are skipped rather than shifting everything by one.
-        /// </summary>
         public void CopyTo(Vector3[] euler, Vector3[] scale, bool[] driven, bool[] applyScale)
         {
             foreach (var entry in bones)

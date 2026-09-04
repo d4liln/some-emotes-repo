@@ -69,7 +69,7 @@ namespace SomeEmotesREPO
             }
 
             bool allowed = CanOpen(emotes);
-            bool held = allowed && Input.GetKey(EmoteLoader.PanelKey);
+            bool held = allowed && Input.GetKey(SomeEmotesREPO.EmoteKeyCode);
 
             if (held && !_wasHeld)
             {
@@ -91,9 +91,6 @@ namespace SomeEmotesREPO
                 InputManager.instance.DisableMovement();
             }
 
-            // Paging first: it rebuilds the page, and the last one is short. Aiming
-            // against the page that is about to be replaced leaves a slot number that no
-            // longer addresses anything, and OnGUI runs before Update comes round again.
             Paging();
             Aim();
 
@@ -168,7 +165,6 @@ namespace SomeEmotesREPO
         private void Rebuild()
         {
             _page.Clear();
-            // The aimed slot belongs to the page that is being replaced.
             _picked = -1;
 
             var all = EmoteLoader.DisplayOrder();
@@ -242,9 +238,6 @@ namespace SomeEmotesREPO
             float width = radius * 1.15f;
 
             var title = new Rect(centre.x - width * 0.5f, centre.y - 26f, width, 34f);
-            // Range-checked rather than trusting _picked: OnGUI runs several times per
-            // frame, between which the page can have been rebuilt, and an exception here
-            // takes the whole overlay down for that frame.
             bool valid = _picked >= 0 && _picked < _page.Count;
 
             GUI.color = Color.white;
@@ -261,12 +254,6 @@ namespace SomeEmotesREPO
             GUI.Label(line, hint, _hintStyle);
         }
 
-        /// <summary>
-        /// Unity lowercases every path inside an asset bundle, so a clip filed as
-        /// "Hip Hop Dancing 1.anim" reaches us as "hip hop dancing 1". The capitals go
-        /// back on here rather than being carried in a second file: the clip names are
-        /// the ones players read, so keeping them presentable is the bundle's job.
-        /// </summary>
         private static string Pretty(string name)
         {
             if (string.IsNullOrEmpty(name)) return string.Empty;

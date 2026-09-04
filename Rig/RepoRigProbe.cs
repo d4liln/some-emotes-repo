@@ -2,31 +2,17 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using BepInEx.Configuration;
 using UnityEngine;
 
 namespace SomeEmotesREPO.Rig
 {
-    /// <summary>
-    /// Phase 1 of the "no clone" migration: prove we can drive the real avatar rig.
-    ///
-    /// It binds the 14 ANIM bones of a chosen player and, in LateUpdate, forces a pose
-    /// onto them. Everything here is client side and networked to nobody, which is the
-    /// point: it isolates the rig question from the netcode question.
-    ///
-    /// What it is meant to establish, in one session:
-    ///   1. LateUpdate wins over the game Animator. Turning the probe on with an
-    ///      all-zero pose freezes the avatar in its rest pose, which no game clip does.
-    ///   2. Cosmetics, crown and health bar follow the bones, because they are parented
-    ///      under them.
-    ///   3. The voice head motion survives. The readout shows clipLoudness next to the
-    ///      live angle of code_head_top, a child of the ANIM HEAD TOP we are writing.
-    ///
-    /// The angles found here are also the starting calibration for the phase 3 solver,
-    /// which is why they are saved to rigpose.json rather than living in code.
-    /// </summary>
     [DefaultExecutionOrder(10000)]
     public class RepoRigProbe : MonoBehaviour
     {
+        internal static ConfigEntry<bool> ProbeEnabled { get; private set; } = null!;
+        internal static ConfigEntry<KeyCode> ProbeKey { get; private set; } = null!;
+
         private const float StepDefault = 5f;
         private const float StepFine = 1f;
         private const float StepCoarse = 25f;
@@ -47,30 +33,15 @@ namespace SomeEmotesREPO.Rig
         private int _selectedAxis;
         private string _status = "Inactive";
         private float _rebindCooldown;
-
-        // Sweep mode. Writing identity to every bone does not look "frozen": the code_*
-        // transforms keep leaning, twisting and looking around, so a still pose proves
-        // nothing to the eye. Sweeping one axis of one bone through a wide arc does:
-        // either the limb swings, and LateUpdate wins over the Animator, or it does not.
-        // It doubles as the fastest way to read a bone's local axes.
         private const float SweepAmplitude = 60f;
         private const float SweepPeriod = 1.5f;
         private const float SweepAxisDuration = 3f;
         private bool _sweep;
         private float _sweepTime;
-
-        // REPO is first person, so posing your own avatar is invisible from inside your
-        // own head. Same trick the shipped emote system uses: push the camera back along
-        // its local Z. Pulled forward from phase 2 because phase 1 cannot be observed
-        // without it.
         private const float CameraDistanceMin = 0.5f;
         private const float CameraDistanceMax = 6f;
         private Transform? _camera;
         private float _cameraDistance = 3.25f;
-
-        // Phases 3 and 4. The player owns the proxy rig, the solver, the suppression and
-        // the fades, so the probe drives an emote through exactly the same path the
-        // networked emote system will.
         private readonly EmoteRigPlayer _player = new EmoteRigPlayer();
         private EmoteProxyRig? _reference;
         private List<AnimationClip> _clips = new List<AnimationClip>();
@@ -89,12 +60,16 @@ namespace SomeEmotesREPO.Rig
             }
             LoadPose(silent: true);
 
-            // BepInEx reads the config once, at plugin load. Editing the .cfg while the
-            // game runs has no effect, and the probe then looks silently broken. Say so
-            // out loud instead.
-            if (SomeEmotesREPO.RigProbeEnabled.Value)
+            ProbeEnabled = SomeEmotesREPO.Instance.Config.Bind(
+                "Debug", "RigProbe", false,
+                "Enables the rig probe: an in-game tool that binds the real player avatar bones and forces a pose onto them. Used to develop the clone-free emote system.");
+            ProbeKey = SomeEmotesREPO.Instance.Config.Bind(
+                "Debug", "RigProbeKey", KeyCode.F8,
+                "Opens and closes the rig probe overlay.");
+
+            if (ProbeEnabled.Value)
             {
-                SomeEmotesREPO.Logger.LogInfo($"[RigProbe] Enabled. Press [{SomeEmotesREPO.RigProbeKey.Value}] in a level to bind the avatar rig.");
+                SomeEmotesREPO.Logger.LogInfo($"[RigProbe] Enabled. Press [{ProbeKey.Value}] in a level to bind the avatar rig.");
             }
             else
             {
@@ -110,14 +85,12 @@ namespace SomeEmotesREPO.Rig
             if (_reference != null) Destroy(_reference.gameObject);
         }
 
-        // ---------------------------------------------------------------- input
-
         private void Update()
         {
-            if (!SomeEmotesREPO.RigProbeEnabled.Value) return;
+            if (!ProbeEnabled.Value) return;
             if (ChatManager.instance != null && ChatManager.instance.chatActive) return;
 
-            if (Input.GetKeyDown(SomeEmotesREPO.RigProbeKey.Value)) SetActive(!_active);
+            if (Input.GetKeyDown(ProbeKey.Value)) SetActive(!_active);
             if (!_active) return;
 
             if (Input.GetKeyDown(KeyCode.PageUp)) CycleTarget(1);
@@ -169,10 +142,6 @@ namespace SomeEmotesREPO.Rig
             }
 
             if (Input.GetKeyDown(KeyCode.F5)) TogglePlayback();
-            // Not the bracket keys: those are physical QWERTY positions, so they land
-            // somewhere else entirely on an AZERTY keyboard, and REPO already binds them.
-            // F2/F3 are the ones to reach for; Home/End work too but a laptop without a
-            // navigation block hides them behind Fn.
             if (Input.GetKeyDown(KeyCode.F2) || Input.GetKeyDown(KeyCode.Home)) CycleClip(-1);
             if (Input.GetKeyDown(KeyCode.F3) || Input.GetKeyDown(KeyCode.End)) CycleClip(1);
 
@@ -197,7 +166,6 @@ namespace SomeEmotesREPO.Rig
 
         private static int Wrap(int value, int length) => (value % length + length) % length;
 
-        /// <summary>Which axis the sweep is currently exercising: 0=X, 1=Y, 2=Z.</summary>
         private int SweepAxis() => Wrap(Mathf.FloorToInt(_sweepTime / SweepAxisDuration), 3);
 
         private Vector3 SweepEuler()
@@ -208,8 +176,6 @@ namespace SomeEmotesREPO.Rig
                  : axis == 1 ? new Vector3(0f, angle, 0f)
                              : new Vector3(0f, 0f, angle);
         }
-
-        // ---------------------------------------------------------------- driving
 
         private void LateUpdate()
         {
@@ -226,9 +192,6 @@ namespace SomeEmotesREPO.Rig
                 return;
             }
 
-            // Local player is normally rendered shadows-only, so we would be posing an
-            // invisible body. This is the game's own API, used by the crystal ball and
-            // the walkie talkie, and it also restores head look-at for the local avatar.
             if (_target == PlayerAvatar.instance)
             {
                 _binder.Visuals.ShowSelfOverride(0.1f);
@@ -263,8 +226,6 @@ namespace SomeEmotesREPO.Rig
             }
         }
 
-        // ---------------------------------------------------------------- targeting
-
         private void SetActive(bool value)
         {
             if (_active == value) return;
@@ -277,7 +238,6 @@ namespace SomeEmotesREPO.Rig
             }
             else
             {
-                // Bones the current game clip does not animate would stay where we left them.
                 _player.Cancel("the probe was closed");
                 _binder?.ResetToRest();
                 _binder = null;
@@ -320,7 +280,6 @@ namespace SomeEmotesREPO.Rig
 
         private void Rebind(PlayerAvatar? avatar)
         {
-            // Never leave a previous target suppressed: its animator would stay at speed 0.
             _player.Cancel("the probe changed target");
             _target = avatar;
             _binder = null;
@@ -345,14 +304,6 @@ namespace SomeEmotesREPO.Rig
             SomeEmotesREPO.Logger.LogInfo("[RigProbe] " + binder!.Describe());
         }
 
-        // ---------------------------------------------------------------- reference dancer
-
-        /// <summary>
-        /// Spawns a visible copy of the bundle rig beside the player, dancing the same
-        /// clip. It shows the pose the clip really describes, so any limb the solver gets
-        /// wrong is visible as a difference rather than a hunch. A still-pose emote is the
-        /// best case: the two rigs cannot drift apart, so every difference is a real one.
-        /// </summary>
         private void ToggleReference()
         {
             if (_reference != null)
@@ -387,7 +338,6 @@ namespace SomeEmotesREPO.Rig
             SomeEmotesREPO.Logger.LogInfo($"[Solver] Reference dancer at {_reference.transform.position}.");
         }
 
-        /// <summary>A material that is known to render in this game, borrowed from the avatar.</summary>
         private Material? FindLiveMaterial()
         {
             if (_binder == null) return null;
@@ -407,13 +357,10 @@ namespace SomeEmotesREPO.Rig
             _reference.PlaceAt(_target.transform.position + facing * (Vector3.right * 1.6f), facing);
         }
 
-        // ---------------------------------------------------------------- playback
-
         private void TogglePlayback()
         {
             if (_player.Playing)
             {
-                // Graceful, so the fade-out is what gets tested rather than bypassed.
                 _player.Stop();
                 _status = "Fading out";
                 return;
@@ -452,12 +399,9 @@ namespace SomeEmotesREPO.Rig
             _clipIndex = Wrap(_clipIndex + direction, _clips.Count);
             if (_player.Playing && _target != null)
             {
-                // Restarting on the same avatar keeps the weight, so the two dances
-                // crossfade into each other instead of dropping through the rest pose.
                 _player.Play(_target, _clips[_clipIndex]);
                 _status = "Playing " + _clips[_clipIndex].name;
             }
-            // Keep the reference on the same clip, or comparing them means nothing.
             _reference?.Play(_clips[_clipIndex]);
         }
 
@@ -473,22 +417,6 @@ namespace SomeEmotesREPO.Rig
             SomeEmotesREPO.Logger.LogInfo($"[Solver] {_clips.Count} emote clips available.");
         }
 
-        // ---------------------------------------------------------------- axis dump
-
-        /// <summary>
-        /// Measures, rather than eyeballs, what each bone's local axes do.
-        ///
-        /// For every bone it reports the local X/Y/Z expressed in the avatar's own frame
-        /// (+X right, +Y up, +Z forward), plus the direction and length from the bone to
-        /// the mesh it drives. That second line is what the solver actually consumes: it
-        /// is the limb's rest direction, the thing that has to be aimed at the Mixamo
-        /// hand or foot.
-        ///
-        /// Bones are put back to rest first, so the reading describes the rig and not
-        /// whatever pose is currently dialled in. The code_* transforms in the parent
-        /// chain (lean, tilt, look-at) still contribute a few degrees of the game's own
-        /// live motion; that is well below the precision needed to identify an axis.
-        /// </summary>
         private void DumpAxes()
         {
             if (_binder == null)
@@ -513,18 +441,11 @@ namespace SomeEmotesREPO.Rig
                               $"  Y={V(root.InverseTransformDirection(bone.up))}" +
                               $"  Z={V(root.InverseTransformDirection(bone.forward))}");
 
-                // Skeleton proportions: where this joint sits relative to the root.
                 Transform? hips = _binder[RigBone.Root];
                 if (hips != null && bone != hips)
                 {
                     sb.AppendLine($"      joint  at {V(hips.InverseTransformPoint(bone.position))} in ANIM BOT space");
                 }
-
-                // The mesh nodes sit exactly on the bone pivot, so transform positions say
-                // nothing. The geometry lives in the vertices, so measure the renderer
-                // bounds instead, expressed in this bone's own local frame: that is the
-                // frame the solver rotates in, and it shows which local axis the limb
-                // extends along and how long it is.
                 var meshes = MeshesBelow(bone);
                 if (meshes.Count == 0)
                 {
@@ -544,12 +465,6 @@ namespace SomeEmotesREPO.Rig
 
         private static string V(Vector3 v) => $"({v.x,6:0.00},{v.y,6:0.00},{v.z,6:0.00})";
 
-        /// <summary>
-        /// The body meshes owned by one bone. Only "mesh_*" renderers count: it skips the
-        /// health display, the tumble wings, the map tool and the cosmetics, which hang
-        /// under the same bones but say nothing about the limb's shape. Stops at the next
-        /// ANIM bone, which belongs to the next limb.
-        /// </summary>
         private static List<Renderer> MeshesBelow(Transform bone)
         {
             var result = new List<Renderer>();
@@ -561,8 +476,6 @@ namespace SomeEmotesREPO.Rig
                 for (int i = 0; i < t.childCount; i++)
                 {
                     Transform child = t.GetChild(i);
-                    // A "* SCALE" node still belongs to this bone; only a real next bone
-                    // ends the search.
                     if (child.name.StartsWith("ANIM ", System.StringComparison.Ordinal)
                         && !child.name.EndsWith(" SCALE", System.StringComparison.Ordinal)) continue;
 
@@ -575,8 +488,6 @@ namespace SomeEmotesREPO.Rig
                 }
             }
         }
-
-        // ---------------------------------------------------------------- pose file
 
         private static string PoseFilePath()
         {
@@ -629,11 +540,9 @@ namespace SomeEmotesREPO.Rig
             }
         }
 
-        // ---------------------------------------------------------------- overlay
-
         private void OnGUI()
         {
-            if (!_active || !SomeEmotesREPO.RigProbeEnabled.Value) return;
+            if (!_active || !ProbeEnabled.Value) return;
 
             if (_style == null)
             {
@@ -665,7 +574,7 @@ namespace SomeEmotesREPO.Rig
         private string BuildOverlay()
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"<b>SomeEmotesREPO - rig probe</b>   <color=#9aa>[{SomeEmotesREPO.RigProbeKey.Value}] close</color>");
+            sb.AppendLine($"<b>SomeEmotesREPO - rig probe</b>   <color=#9aa>[{ProbeKey.Value}] close</color>");
 
             string targetName = _target != null ? DisplayName(_target) : "none";
             string localTag = _target != null && _target == PlayerAvatar.instance ? "  <color=#4fc58c>(local)</color>" : string.Empty;
@@ -727,11 +636,6 @@ namespace SomeEmotesREPO.Rig
             return sb.ToString();
         }
 
-        /// <summary>
-        /// The blend, drawn. A number that crosses its whole range in a fifth of a second
-        /// is unreadable; a bar shows the shape of the ramp, which is the thing being
-        /// judged here.
-        /// </summary>
         private static string Bar(float weight)
         {
             const int Width = 20;
@@ -745,13 +649,6 @@ namespace SomeEmotesREPO.Rig
             string text = $"{value,7:0.0}";
             return selected ? $"<color=#4fc58c><b>{text}</b></color>" : $"<color=#889>{text}</color>";
         }
-
-        /// <summary>
-        /// The acceptance criterion of phase 1, on screen: clipLoudness is what the game
-        /// feeds PlayerAvatarTalkAnimation, and code_head_top is the transform it rotates.
-        /// If that angle keeps moving while we hold a forced pose, the voice head motion
-        /// composes with our pose and the clone is no longer needed for it.
-        /// </summary>
         private string VoiceLine()
         {
             if (_binder == null) return "Voice : <color=#889>Waiting for the bind</color>";

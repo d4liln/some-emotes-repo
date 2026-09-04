@@ -4,7 +4,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>ImGogole</Authors>
-    <Version>2.0.0</Version>
+    <Version>2.0.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
@@ -31,6 +31,14 @@
     <None Remove="Directory.Repo.props" />
   </ItemGroup>
   <ItemGroup>
+    <!-- The rig probe is a development tool: it binds the avatar bones and forces a pose
+         onto them, which is how the clone-free emote system was worked out. It has no use
+         to a player, so it is kept in the repository but left out of the shipped assembly.
+         Delete the two lines below to build with it again; it binds its own settings and
+         needs nothing else, beyond an AddComponent<Rig.RepoRigProbe>() in the plugin. -->
+    <Compile Remove="Rig/RepoRigProbe.cs" />
+    <Compile Remove="Rig/RigPoseFile.cs" />
+
     <Compile Remove="Untrack/**" />
     <None Remove="Untrack/**" />
     <Compile Remove="Codebase/**" />
